@@ -1,16 +1,18 @@
 package mk.ukim.finki.emt_lab.web;
 
 import mk.ukim.finki.emt_lab.model.Accomodation;
+import mk.ukim.finki.emt_lab.model.Host;
 import mk.ukim.finki.emt_lab.model.dto.AccomodationDTO;
 import mk.ukim.finki.emt_lab.service.AccomodationService;
 import mk.ukim.finki.emt_lab.service.HostService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-//@RequestMapping("/api/accomodations")
+@RequestMapping("/api/accomodations")
 public class AccomodationController {
     private final AccomodationService service;
     private final HostService hostService;
@@ -20,7 +22,7 @@ public class AccomodationController {
         this.hostService = hostService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<Accomodation> getAccomodations(){
         return this.service.listAll();
     }
@@ -37,9 +39,11 @@ public class AccomodationController {
 
         this.service.create(accomodationDTO.getName(), accomodationDTO.getCategory(), accomodationDTO.getHostId(), accomodationDTO.getNumRooms());
         return ResponseEntity.ok().build();
+
     }
 
-    @PostMapping("/delete-accomodation/{id}")
+
+    @DeleteMapping("/delete-accomodation/{id}")
     public ResponseEntity<Void> deleteAccomodation(@PathVariable Long id){
         if(id == null){
             return ResponseEntity.notFound().build();
@@ -53,7 +57,7 @@ public class AccomodationController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/edit-accomodation/{id}")
+    @PutMapping("/edit-accomodation/{id}")
     public ResponseEntity<Void> editAccomodation(@PathVariable Long id, @RequestBody AccomodationDTO accomodationDTO){
         if(accomodationDTO == null){
             return ResponseEntity.notFound().build();

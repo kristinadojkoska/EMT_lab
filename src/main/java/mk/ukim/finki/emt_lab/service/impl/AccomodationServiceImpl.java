@@ -4,6 +4,7 @@ package mk.ukim.finki.emt_lab.service.impl;
 import mk.ukim.finki.emt_lab.events.AccomodationCreatedEvent;
 import mk.ukim.finki.emt_lab.events.AccomodationDeletedEvent;
 import mk.ukim.finki.emt_lab.events.AccomodationEditedEvent;
+import mk.ukim.finki.emt_lab.events.ZeroRoomAccommodationDeletedEvent;
 import mk.ukim.finki.emt_lab.model.Accomodation;
 import mk.ukim.finki.emt_lab.model.Category;
 import mk.ukim.finki.emt_lab.model.Host;
@@ -42,9 +43,12 @@ public class AccomodationServiceImpl implements AccomodationService {
     @Override
     public void deleteById(Long id) {
         var accomodation = this.findById(id);
+        if(accomodation.getNumRooms() == 0){
+            this.applicationEventPublisher.publishEvent(new ZeroRoomAccommodationDeletedEvent(accomodation));
+            System.out.println("0 rooms left!");
+        }
         this.applicationEventPublisher.publishEvent(new AccomodationDeletedEvent(accomodation));
         this.accomodationRepository.delete(accomodation);
-
     }
 
     @Override

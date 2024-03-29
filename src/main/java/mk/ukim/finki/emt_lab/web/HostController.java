@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/api")
+@RequestMapping("/api/hosts")
 public class HostController {
 
     private final HostService service;
@@ -21,13 +21,13 @@ public class HostController {
         this.countryService = countryService;
     }
 
-    @GetMapping("/hosts")
+    @GetMapping()
     public List<Host> getHosts() {
         return this.service.listAll();
     }
 
     @PostMapping("/add-host")
-    public ResponseEntity<Void> addHost(@RequestBody HostDTO hostDTO){
+    public ResponseEntity<Host> addHost(@RequestBody HostDTO hostDTO){
         if(hostDTO == null){
             return  ResponseEntity.notFound().build();
         }
@@ -40,7 +40,7 @@ public class HostController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/delete-host/{id}")
+    @DeleteMapping("/delete-host/{id}")
     public ResponseEntity<Void> getHosts(@PathVariable Long id){
         if(id == null){
             return ResponseEntity.notFound().build();
